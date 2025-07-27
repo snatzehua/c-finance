@@ -11,8 +11,6 @@ steps:
         "gdelc-queries-budget-auto-disable",
         "--source=budget-auto-disable",
         "--region=asia-southeast1",
-        "--runtime=nodejs20",
-        "--entry-point=stopBilling",
         "--allow-unauthenticated",
       ]
 
