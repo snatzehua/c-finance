@@ -1,0 +1,19 @@
+steps:
+  - name: "gcr.io/cloud-builders/npm"
+    dir: "budget-auto-disable"
+    args: ["install"]
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "gdelc-queries-budget-auto-disable",
+        "--source=budget-auto-disable",
+        "--region=asia-southeast1",
+        "--runtime=nodejs20",
+        "--entry-point=stopBilling",
+        "--allow-unauthenticated",
+      ]
+
+timeout: "900s"

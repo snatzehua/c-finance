@@ -1,0 +1,24 @@
+# Ignore virtual environments
+envs/
+.venv/
+*.pyc
+__pycache__/
+
+# Ignore local credentials
+*.json
+
+# Ignore data
+*.csv
+
+# Ignore VSCode and system files
+.vscode/
+.DS_Store
+
+# Ignore node_modules if it appears (for Node.js)
+node_modules/
+
+# Allow Cloud Run folder explicitly
+!budget-auto-disable/**
+
+# Ignore Google Cloud Platform specific files
+Y
