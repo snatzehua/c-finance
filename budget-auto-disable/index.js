@@ -4,7 +4,7 @@ const { CloudBillingClient } = require("@google-cloud/billing");
 
 const app = express();
 const billing = new CloudBillingClient();
-const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT;
+const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT || "gdelc-queries";
 const PROJECT_NAME = `projects/${PROJECT_ID}`;
 
 // Parse JSON body
@@ -12,10 +12,20 @@ app.use(bodyParser.json());
 
 app.post("/", async (req, res) => {
   try {
-    const pubsubData = req.body;
+    const message = req.body.message;
+    if (!message || !message.data) {
+      return res.status(400).send("Missing Pub/Sub message data");
+    }
 
-    if (!pubsubData || typeof pubsubData.costAmount !== "number") {
-      return res.status(400).send("Invalid request body");
+    // Decode base64-encoded string
+    const decoded = Buffer.from(message.data, "base64").toString();
+    const pubsubData = JSON.parse(decoded);
+
+    if (
+      typeof pubsubData.costAmount !== "number" ||
+      typeof pubsubData.budgetAmount !== "number"
+    ) {
+      return res.status(400).send("Invalid billing data format");
     }
 
     if (pubsubData.costAmount <= pubsubData.budgetAmount) {
@@ -59,8 +69,8 @@ const disableBilling = async (projectName) => {
   return `Billing disabled: ${JSON.stringify(res)}`;
 };
 
-// Start server on correct port
+// Start server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`🚀 Server listening on port ${PORT}`);
+  console.log(`Cloud Run server listening on port ${PORT}`);
 });
