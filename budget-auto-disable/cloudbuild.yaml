@@ -17,3 +17,5 @@ steps:
       ]
 
 timeout: "900s"
+
+logging: CLOUD_LOGGING_ONLY
